@@ -1,0 +1,7 @@
+FROM node:8-alpine
+
+ENV MY_HOME="/home/sparsha"
+
+RUN npm install yarn -g
+RUN apk update
+RUN apk add git openssh-client

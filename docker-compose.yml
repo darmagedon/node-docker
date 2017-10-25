@@ -1,0 +1,76 @@
+---
+version: '2'
+services:
+  nginx:
+    container_name: "mysite_nginx"
+    image: "nginx:1.13.5-alpine"
+    ports:
+      - "${NGINX_PORT}:80"
+    volumes:
+      - "./nginx/conf.d:/etc/nginx/conf.d"
+    depends_on:
+      - frontend
+      # - ap1
+      # - ap2
+      # - ap3
+      # - ap4
+
+  yarn_install:
+    container_name: "mysite_yarn_install"
+    build: "./node"
+    volumes:
+      - "../${FRONTEND}:${CODE_SOURCE}"
+      - "${MY_HOME}/.ssh:/root/.ssh"
+    working_dir: "${CODE_SOURCE}"
+    command: yarn install
+  
+  frontend:
+    container_name: "mysite_yarn_start"
+    extends: yarn_install
+    ports:
+      - "${FRONTEND_PORT_LOCAL}:${FRONTEND_PORT_DOCKER}"
+    command: yarn start
+
+  # ap1:
+  #   container_name: "mysite_ap1"
+  #   build: "./node"
+  #   volumes:
+  #     - "../ap1:${CODE_SOURCE}"
+  #     - "${MY_HOME}/.ssh:/root/.ssh"
+  #   working_dir: "${CODE_SOURCE}"
+  #   command: bash -c "yarn install && yarn start"
+  #   ports:
+  #     - "8181:8181"
+
+  # ap2:
+  #   container_name: "mysite_ap2"
+  #   build: "./node"
+  #   volumes:
+  #     - "../ap2:${CODE_SOURCE}"
+  #     - "${MY_HOME}/.ssh:/root/.ssh"
+  #   working_dir: "${CODE_SOURCE}"
+  #   command: bash -c "yarn install && yarn start"
+  #   ports:
+  #     - "8182:8181"
+
+  # ap3:
+  #   container_name: "mysite_ap3"
+  #   build: "./node"
+  #   volumes:
+  #     - "../ap3:${CODE_SOURCE}"
+  #     - "${MY_HOME}/.ssh:/root/.ssh"
+  #   working_dir: "${CODE_SOURCE}"
+  #   command: bash -c "yarn install && yarn start"
+  #   ports:
+  #     - "8183:8181"
+
+  # ap4:
+  #   container_name: "mysite_ap4"
+  #   build: "./node"
+  #   volumes:
+  #     - "../ap4:${CODE_SOURCE}"
+  #     - "${MY_HOME}/.ssh:/root/.ssh"
+  #   working_dir: "${CODE_SOURCE}"
+  #   command: bash -c "yarn install && yarn start"
+  #   ports:
+  #     - "8184:8181"
